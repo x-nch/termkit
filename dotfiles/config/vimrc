@@ -1,0 +1,323 @@
+# ~/.vimrc: Vim configuration for TermKit
+
+" Basic settings
+set nocompatible               " Use vim defaults, not vi
+set backspace=indent,eol,start  " Allow backspace over everything
+set history=1000                " Keep 1000 lines of command line history
+set ruler                       " Show the cursor position all the time
+set showcmd                     " Display incomplete commands
+set laststatus=2                " Always show the status line
+set autowrite                   " Automatically save before commands
+set autoread                    " Automatically read changed files
+set hidden                      " Allow buffer switching without saving
+set number                      " Show line numbers
+set relativenumber              " Show relative line numbers
+set wrap                        " Wrap long lines
+set linebreak                   " Wrap at word boundaries
+set breakindent                  " Indent wrapped lines
+
+" Search settings
+set ignorecase                  " Ignore case when searching
+set smartcase                   " Smart case search
+set hlsearch                     " Highlight search results
+set incsearch                    " Incremental search
+set magic                       " Use regular expressions
+set showmatch                   " Show matching brackets
+set matchtime=2                 " Time to show matching bracket
+
+" Indentation
+set expandtab                   " Use spaces instead of tabs
+set smarttab                    " Smart tab handling
+set shiftwidth=4                " Number of spaces for autoindenting
+set softtabstop=4               " Number of spaces for a tab
+set tabstop=4                   " Number of spaces that a tab counts as
+set autoindent                  " Copy indent from current line
+set smartindent                 " Smart autoindenting
+set shiftround                  " Round indent to multiple of shiftwidth
+
+" Text display
+set display=lastline            " Show as much as possible of last line
+set encoding=utf-8              " Use UTF-8 encoding
+set fileencoding=utf-8          " Default file encoding
+set termencoding=utf-8          " Terminal encoding
+set scrolloff=3                 " Keep 3 lines above/below cursor
+set sidescrolloff=5             " Keep 5 columns left/right of cursor
+set cursorline                   " Highlight current line
+set cursorcolumn                " Highlight current column (optional)
+
+" Wild menu
+set wildmenu                    " Enhanced command completion
+set wildmode=full               " Complete with full menu
+set wildignore=*.pyc,*.o,*.obj,*~,*.swp,*.tmp,*.bak,*.class,*.log
+
+" Backup and swap files
+set backup                      " Enable backup files
+set backupdir=~/.vim/backup//   " Keep backup files in one place
+set directory=~/.vim/swap//     " Keep swap files in one place
+set undofile                    " Enable undo files
+set undodir=~/.vim/undo//       " Keep undo files in one place
+
+" Create necessary directories
+if !isdirectory($HOME.'/.vim/backup')
+    silent! call mkdir($HOME.'/.vim/backup', 'p')
+endif
+if !isdirectory($HOME.'/.vim/swap')
+    silent! call mkdir($HOME.'/.vim/swap', 'p')
+endif
+if !isdirectory($HOME.'/.vim/undo')
+    silent! call mkdir($HOME.'/.vim/undo', 'p')
+endif
+
+" Split windows
+set splitbelow                  " Split new windows below the current
+set splitright                  " Split new windows to the right
+
+" GUI settings (if applicable)
+if has('gui_running')
+    set guioptions-=m            " Remove menu bar
+    set guioptions-=T            " Remove toolbar
+    set guifont=Monospace\ 12    " Set font
+    set lines=40                 " Set window height
+    set columns=120              " Set window width
+endif
+
+" Colors
+syntax on                       " Enable syntax highlighting
+set background=dark              " Use dark background
+colorscheme default              " Use default colorscheme (can be overridden)
+
+" Enable 256 colors
+if &term =~ 'xterm\|screen\|tmux'
+    set t_Co=256
+endif
+
+" Mouse support
+if has('mouse')
+    set mouse=a                  " Enable mouse in all modes
+endif
+
+" Folding
+set foldenable                   " Enable folding
+set foldlevelstart=100           " Start with all folds open
+set foldmethod=syntax            " Use syntax for folding
+
+" Visual bells
+set visualbell                  " Use visual bell instead of beeping
+set noerrorbells                 " Don't make noise
+
+" Completion settings
+set complete=.,w,b,u,t,i        " Completion options
+set completeopt=menuone,preview  " Completion menu options
+
+" Timeouts
+set timeoutlen=1000             " Time to wait for mapped sequence
+set ttimeoutlen=50              " Time to wait for key code
+
+" File type settings
+filetype on                     " Enable file type detection
+filetype plugin on              " Enable file type plugins
+filetype indent on              " Enable file type indenting
+
+" Function to toggle relative numbers
+function! ToggleRelativeNumbers()
+    if &relativenumber
+        set norelativenumber
+    else
+        set relativenumber
+    endif
+endfunction
+
+" Function to toggle highlight search
+function! ToggleHighlightSearch()
+    if &hlsearch
+        set nohlsearch
+    else
+        set hlsearch
+    endif
+endfunction
+
+" Custom key mappings
+
+" Leader key
+let mapleader = ","
+
+" Fast saving
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>x :x<CR>
+
+" Movement between splits
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Resize splits
+nnoremap <S-left> <C-w><
+nnoremap <S-right> <C-w>>
+nnoremap <S-up> <C-w>-
+nnoremap <S-down> <C-w>+
+
+" Clear search highlight
+nnoremap <leader>h :nohlsearch<CR>
+nnoremap <leader>h :call ToggleHighlightSearch()<CR>
+
+" Toggle relative line numbers
+nnoremap <leader>r :call ToggleRelativeNumbers()<CR>
+
+" Navigate buffers
+nnoremap <leader>b :buffers<CR>:buffer<Space>
+nnoremap <leader>l :bnext<CR>
+nnoremap <leader>k :bprev<CR>
+
+" Close buffer
+nnoremap <leader>c :bp<CR>:bd #<CR>
+
+" Window management
+nnoremap <leader>v :vsplit<CR>
+nnoremap <leader>s :split<CR>
+
+" Tab management
+nnoremap <leader>t :tabnew<CR>
+nnoremap <leader>1 :tabfirst<CR>
+nnoremap <leader>2 :tabnext<CR>
+nnoremap <leader>0 :tablast<CR>
+
+" Remove trailing whitespace
+nnoremap <leader>tw :%s/\s\+$//e<CR>
+
+" Toggle paste mode
+set pastetoggle=<F2>
+
+" Search mappings
+nnoremap <C-g> :grep<Space>
+nnoremap <C-q> :cwindow<CR>
+
+" Quick fix navigation
+nnoremap <leader>n :cnext<CR>
+nnoremap <leader>p :cprev<CR>
+
+" Jump to beginning/end of line in insert mode
+inoremap <C-e> <C-o>$
+inoremap <C-a> <C-o>0
+
+" Better escape from insert mode
+inoremap jj <Esc>
+inoremap kk <Esc>
+
+" Command mode shortcuts
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+
+" File type specific settings
+
+" Python
+au BufNewFile,BufRead *.py setlocal textwidth=79
+au BufNewFile,BufRead *.py setlocal tabstop=4
+au BufNewFile,BufRead *.py setlocal shiftwidth=4
+au BufNewFile,BufRead *.py setlocal expandtab
+
+" JavaScript
+au BufNewFile,BufRead *.js setlocal tabstop=2
+au BufNewFile,BufRead *.js setlocal shiftwidth=2
+au BufNewFile,BufRead *.js setlocal expandtab
+au BufNewFile,BufRead *.js setlocal textwidth=120
+
+" TypeScript
+au BufNewFile,BufRead *.ts setlocal tabstop=2
+au BufNewFile,BufRead *.ts setlocal shiftwidth=2
+au BufNewFile,BufRead *.ts setlocal expandtab
+au BufNewFile,BufRead *.ts setlocal textwidth=120
+
+" JSON
+au BufNewFile,BufRead *.json setlocal tabstop=2
+au BufNewFile,BufRead *.json setlocal shiftwidth=2
+au BufNewFile,BufRead *.json setlocal expandtab
+
+" YAML
+au BufNewFile,BufRead *.yaml setlocal tabstop=2
+au BufNewFile,BufRead *.yaml setlocal shiftwidth=2
+au BufNewFile,BufRead *.yaml setlocal expandtab
+au BufNewFile,BufRead *.yml setlocal tabstop=2
+au BufNewFile,BufRead *.yml setlocal shiftwidth=2
+au BufNewFile,BufRead *.yml setlocal expandtab
+
+" Go
+au BufNewFile,BufRead *.go setlocal tabstop=4
+au BufNewFile,BufRead *.go setlocal shiftwidth=4
+au BufNewFile,BufRead *.go setlocal expandtab=false
+au BufNewFile,BufRead *.go setlocal noexpandtab
+
+" Rust
+au BufNewFile,BufRead *.rs setlocal tabstop=4
+au BufNewFile,BufRead *.rs setlocal shiftwidth=4
+au BufNewFile,BufRead *.rs setlocal expandtab
+
+" C/C++
+au BufNewFile,BufRead *.c,*.cpp,*.h,*.hpp setlocal tabstop=4
+au BufNewFile,BufRead *.c,*.cpp,*.h,*.hpp setlocal shiftwidth=4
+au BufNewFile,BufRead *.c,*.cpp,*.h,*.hpp setlocal expandtab
+
+" Shell scripts
+au BufNewFile,BufRead *.sh,*.bash,*.zsh setlocal tabstop=2
+au BufNewFile,BufRead *.sh,*.bash,*.zsh setlocal shiftwidth=2
+au BufNewFile,BufRead *.sh,*.bash,*.zsh setlocal expandtab
+
+" HTML
+au BufNewFile,BufRead *.html,*.htm setlocal tabstop=2
+au BufNewFile,BufRead *.html,*.htm setlocal shiftwidth=2
+au BufNewFile,BufRead *.html,*.htm setlocal expandtab
+
+" CSS
+au BufNewFile,BufRead *.css,*.scss,*.sass setlocal tabstop=2
+au BufNewFile,BufRead *.css,*.scss,*.sass setlocal shiftwidth=2
+au BufNewFile,BufRead *.css,*.scss,*.sass setlocal expandtab
+
+" Markdown
+au BufNewFile,BufRead *.md setlocal tabstop=4
+au BufNewFile,BufRead *.md setlocal shiftwidth=4
+au BufNewFile,BufRead *.md setlocal expandtab
+au BufNewFile,BufRead *.md setlocal textwidth=80
+au BufNewFile,BufRead *.md setlocal spell
+
+" Vim scripts
+au BufNewFile,BufRead *.vim setlocal tabstop=2
+au BufNewFile,BufRead *.vim setlocal shiftwidth=2
+au BufNewFile,BufRead *.vim setlocal expandtab
+
+" Status line
+set statusline=%f           " File name
+set statusline+=%m           " Modified flag
+set statusline+=%r           " Read-only flag
+set statusline+=%h           " Help flag
+set statusline+=%w           " Preview flag
+set statusline+=%=           " Left/right separator
+set statusline+=%y           " File type
+set statusline+=\            " Space
+set statusline+=%l           " Line number
+set statusline+=/            " Separator
+set statusline+=%L           " Total lines
+set statusline+=\            " Space
+set statusline+=%c           " Column number
+set statusline+=\            " Space
+set statusline+=%P           " Percentage through file
+
+" Auto commands
+autocmd BufWritePre * :call s:RemoveTrailingWhitespace()
+
+function! s:RemoveTrailingWhitespace()
+    if !&binary && &filetype != 'diff'
+        let l:save_cursor = getpos('.')
+        %s/\s\+$//e
+        call setpos('.', l:save_cursor)
+    endif
+endfunction
+
+" Local vimrc (optional)
+if filereadable(expand('~/.vimrc.local'))
+    source ~/.vimrc.local
+endif
+
+" End of TermKit vim configuration

@@ -1,0 +1,217 @@
+# ~/.bash_aliases: User-defined aliases for TermKit
+
+# Navigation shortcuts
+alias home='cd ~'
+alias desktop='cd ~/Desktop'
+alias documents='cd ~/Documents'
+alias downloads='cd ~/Downloads'
+alias music='cd ~/Music'
+alias pictures='cd ~/Pictures'
+alias videos='cd ~/Videos'
+
+# Development directories (adjust as needed)
+alias projects='cd ~/projects'
+alias workspace='cd ~/workspace'
+
+# Enhanced ls commands
+alias ls='ls --color=auto'
+alias ll='ls -alF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+alias lsd='ls -d */'
+alias lsl='ls -lh --color=auto'
+
+# Directory tree with depth
+alias tree1='tree -L 1'
+alias tree2='tree -L 2'
+alias tree3='tree -L 3'
+
+# System information aliases
+alias myip='curl -s ifconfig.me'
+alias myiplocal='hostname -I | awk "{print \$1}"'
+alias ports='netstat -tulnp'
+alias portslisten='netstat -tulnp | grep LISTEN'
+alias connections='ss -tulnp'
+
+# Process management aliases
+alias ps10='ps aux | head -11'
+alias pscpu10='ps aux | sort -rk 3,3 | head -11'
+alias psmem10='ps aux | sort -rk 4,4 | head -11'
+alias myps='ps -ef | grep $USER'
+
+# File system aliases
+alias dfh='df -hT'
+alias duh='du -sh * | sort -hr'
+alias duha='du -sh .[!.]* * | sort -hr'
+alias dus='du -sh'
+alias dusch='du -sch'
+alias diskusage='df -h && echo && du -sh --max-depth=1 . 2>/dev/null || du -sh * .* 2>/dev/null | sort -hr'
+
+# Safety aliases
+alias rm='rm -I'
+alias cp='cp -i'
+alias mv='mv -i'
+alias ln='ln -i'
+
+# Enhanced grep aliases
+alias grep='grep --color=auto -n'
+alias egrep='egrep --color=auto -n'
+alias fgrep='fgrep --color=auto -n'
+alias greph='grep -r -n -H --color=auto'
+alias grepext='grep -r -n -H --include="*.py" --include="*.js" --include="*.ts" --include="*.sh"'
+
+# History enhancements
+alias hist='history | grep'
+alias histcount='history | wc -l'
+alias histlatest='history | tail -n 20'
+alias histmost='history | sort | uniq -c | sort -nr | head -n 20'
+
+# Quick file creation
+alias touchfile='touch'
+alias createdir='mkdir -p'
+
+# Date and time aliases
+alias timestamp='date +"%Y%m%d_%H%M%S"'
+alias isodate='date -I'
+alias now='date +"%Y-%m-%d %H:%M:%S"'
+
+# Terminal session management
+alias reload='source ~/.bashrc'
+alias reloadzsh='source ~/.zshrc'
+alias editbashrc='vim ~/.bashrc'
+alias editzshrc='vim ~/.zshrc'
+alias editaliases='vim ~/.bash_aliases'
+
+# System management
+alias update='sudo apt update && sudo apt upgrade -y'  # For Debian/Ubuntu
+alias cleanup='sudo apt autoremove -y && sudo apt autoclean'  # For Debian/Ubuntu
+
+# Network utilities
+alias pingtest='ping -c 4 8.8.8.8'
+alias speedtest='curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python'
+alias trace='traceroute'
+
+# Quick server
+alias serve='python3 -m http.server'
+alias serverphp='php -S localhost:8000'
+
+# Git enhanced aliases
+alias gitlog='git log --oneline --graph --decorate --all'
+alias gitloglatest='git log --oneline -10'
+alias gitlogdetailed='git log --stat --show-signature'
+alias gitunstage='git reset HEAD'
+alias gitundo='git reset --soft HEAD~1'
+alias githardundo='git reset --hard HEAD~1'
+alias gitclean='git clean -fd'
+alias gitfilelog='git log -p --follow'
+alias gitbranchclean='git branch -d'
+alias gitbranchforceclean='git branch -D'
+
+# Docker enhanced aliases
+alias dockerstopall='docker stop $(docker ps -aq)'
+alias dockerrmall='docker rm $(docker ps -aq)'
+alias dockerclean='docker system prune -af'
+alias dockerimagesunused='docker images -f "dangling=true" -q'
+alias dockerrmunused='docker rmi $(docker images -f "dangling=true" -q)'
+
+# Kubernetes enhanced aliases
+alias kctx='kubectl config current-context'
+alias kns='kubectl config view --minify | grep namespace'
+alias kexec='kubectl exec -it'
+alias klogs='kubectl logs -f'
+
+# Quick search functions
+searchfile() {
+    find . -name "*$1*" 2>/dev/null
+}
+
+searchcontent() {
+    grep -r "$1" . 2>/dev/null
+}
+
+searchpy() {
+    grep -r --include="*.py" "$1" . 2>/dev/null
+}
+
+searchjs() {
+    grep -r --include="*.js" --include="*.ts" "$1" . 2>/dev/null
+}
+
+# Quick backup function
+backup() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: backup <file_or_directory>"
+        return 1
+    fi
+    
+    local backup_name="$1.backup.$(date +%Y%m%d_%H%M%S)"
+    cp -r "$1" "$backup_name"
+    echo "Backup created: $backup_name"
+}
+
+# Quick chmod functions
+chmodx() {
+    chmod +x "$@"
+}
+
+chmodr() {
+    chmod -R "$1" "$2"
+}
+
+# Quick mount/umount
+mountusb() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: mountusb <device>"
+        echo "Example: mountusb /dev/sdb1"
+        return 1
+    fi
+    
+    sudo mount "$1" /mnt/usb
+}
+
+umountusb() {
+    sudo umount /mnt/usb
+}
+
+# Quick SSH functions
+sshkey() {
+    ssh-keygen -t rsa -b 4096 -C "$1"
+}
+
+sshcopy() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: sshcopy <user@host>"
+        return 1
+    fi
+    
+    ssh-copy-id "$1"
+}
+
+# Environment shortcuts
+setenv() {
+    export "$1"="$2"
+}
+
+unsetenv() {
+    unset "$1"
+}
+
+# Quick function to find large files
+findlarge() {
+    local size="${1:-100M}"
+    find . -type f -size +"$size" -exec ls -lh {} \; 2>/dev/null | sort -rh
+}
+
+# Quick function to find recently modified files
+findrecent() {
+    local days="${1:-7}"
+    find . -type f -mtime -"$days" -ls 2>/dev/null
+}
+
+# Quick weather function
+weather() {
+    local city="${1:-New York}"
+    curl -s "http://wttr.in/$city?format=3"
+}
+
+# End of TermKit bash_aliases

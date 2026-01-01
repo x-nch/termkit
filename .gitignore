@@ -1,0 +1,245 @@
+# TermKit Git Ignore File
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+.#*
+\#*#
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Security sensitive files
+*.key
+*.pem
+*.crt
+*.p12
+secrets/
+credentials/
+.id_rsa
+.id_rsa.pub
+
+# Local configuration files
+*.local
+config/local/
+.envrc
+.env.local
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-*
+.fleet/
+.jedit/
+.jedit-local/
+
+# Operating system files
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Temporary folders
+tmp/
+temp/
+
+# Local backups
+backups/
+.termkit_backup_*
+.termkit_dotfiles_backup_*
+
+# Git merge files
+*.orig
+*.rej
+
+# Patch files
+*.patch
+
+# Build directories
+build/
+dist/
+out/
+target/
+lib-cov/
+
+# Cache directories
+.sass-cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Tool-specific files
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Rust build artifacts
+Cargo.lock
+target/
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Terraform state
+*.tfstate
+*.tfstate.*
+
+# Docker
+.dockerignore
+
+# Kubernetes secrets
+secrets.yaml
+secrets.yml
+
+# Local testing
+test_results/
+test_reports/
+
+# Performance metrics
+performance/
+
+# Temporary scripts
+temp_*
+temp_script_*
+
+# Downloaded files (will be verified by security module)
+downloads/
+
+# Security audit logs
+security_audit.log
+audit_report.log
+
+# Documentation build
+docs/build/
+docs/_build/
+docs/_static/
+
+# IDE workspace files
+*.code-workspace
+*.sublime-workspace
+
+# Local overrides
+.gitconfig.local
+.bashrc.local
+.zshrc.local
+.profile.local
+.vimrc.local
+.tmux.conf.local
+
+# Experimental features
+experimental/
+sandbox/
+
+# Backup directories from installation
+.termkit_manual_backup_*
+.termkit_dotfiles_backup_*
+.termkit_backup_*
+
+# Temporary directory for security operations
+/tmp/termkit_security_*
+
+# Hash verification failures
+failed_downloads/
+corrupt_files/
+
+# Local test configurations
+test_config/
+local_config/
+
+# Tool-specific ignore files
+.npmignore
+.pnpmignore
+.gitignore_global
+
+# Platform-specific files
+*.app
+*.exe
+*.msi
+*.dmg
+*.pkg
