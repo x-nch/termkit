@@ -9,8 +9,10 @@ set -euo pipefail
 readonly SCRIPT_NAME="$(basename "$0")"
 readonly SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 readonly TERMKIT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-readonly DRY_RUN=false
 readonly BACKUP_DIR="$HOME/.termkit_dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+
+# Dry run mode (can be overridden)
+DRY_RUN=false
 
 # Colors for output
 readonly RED='\033[0;31m'

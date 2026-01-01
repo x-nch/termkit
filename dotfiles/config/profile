@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is read by all shells, including bash, sh, ksh, and zsh.
 

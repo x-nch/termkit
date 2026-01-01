@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # ~/.zshrc: executed by zsh(1) for interactive shells.
 
 # TermKit ZSH Configuration
