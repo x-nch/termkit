@@ -1,9 +1,0 @@
-# Get editor configuration section from gitconfig
-[format]
-    pretty = format:%C(yellow)%h%Creset - %C(green)%ar%Creset - %C(red)%an%Creset - %s
-
-[push]
-    default = simple
-
-[init]
-    defaultBranch = main
