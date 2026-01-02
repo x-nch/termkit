@@ -363,21 +363,26 @@ setup_configurations() {
     local dotfiles_dir="$TERMKIT_DIR/dotfiles"
     
     echo ""
-    echo "You have two options for managing configurations:"
+    echo "You have three options for managing configurations:"
     echo ""
-    echo "${GREEN}Option 1: Use Local Configs (Recommended for Phase 1)${NC}"
+    echo "${GREEN}Option 1: Use Local Configs${NC}"
     echo "  • Creates configs directly in ~/.config/"
     echo "  • Simple and immediate setup"
     echo "  • Version control optional"
     echo ""
-    echo "${CYAN}Option 2: Use Dotfiles System (Phase 2)${NC}"
+    echo "${GREEN}Option 2: Use Dotfiles System (Phase 2 - NEW!)${NC}"
     echo "  • Version control all configs with Git"
-    echo "  • Sync across machines"
-    echo "  • Easy rollback to previous versions"
+    echo "  • Auto-sync across machines"
+    echo "  • Conflict resolution and backup"
     echo "  • Location: $dotfiles_dir"
     echo ""
+    echo "${CYAN}Option 3: Use Local + Dotfiles${NC}"
+    echo "  • Generate local configs AND setup dotfiles for sync"
+    echo "  • Best of both approaches"
+    echo "  • Full version control + immediate use"
+    echo ""
     
-    read -p "Use dotfiles system? (y/n) " -n 1 -r
+    read -p "Choose option [1-3]: " -n 1 -r
     echo
     echo ""
     
@@ -1163,10 +1168,79 @@ EOF
         git config --global core.excludesfile "$gitignore_dest" 2>/dev/null || true
         print_success "Global gitignore installed"
     fi
+}
     
     # Installation complete
     print_header "Installation Complete!"
     show_completion_message
+}
+
+# ============================================================================
+# Dotfiles Structure Creation Functions
+# ============================================================================
+
+create_dotfiles_structure() {
+    local dotfiles_dir="$HOME/nexi/termkit/dotfiles"
+    
+    if [[ ! -d "$dotfiles_dir" ]]; then
+        print_info "Creating dotfiles directory structure..."
+        mkdir -p "$dotfiles_dir"/{config,scripts,templates,backups}
+        print_success "Dotfiles directory created: $dotfiles_dir"
+    fi
+}
+
+sync_to_dotfiles() {
+    local dotfiles_dir="$HOME/nexi/termkit/dotfiles"
+    local backup_name="sync_backup_$(date +%Y%m%d_%H%M%S)"
+    local backup_dir="$dotfiles_dir/backups/$backup_name"
+    
+    print_info "Syncing configurations to dotfiles..."
+    
+    # Create backup directory
+    mkdir -p "$backup_dir"
+    
+    # Copy current configurations to dotfiles
+    local configs=(
+        "$HOME/.config/starship.toml:$dotfiles_dir/config/starship.toml"
+        "$HOME/.config/wezterm/wezterm.lua:$dotfiles_dir/config/wezterm.lua"
+        "$HOME/.config/nvim:$dotfiles_dir/config/nvim"
+        "$HOME/.config/btop:$dotfiles_dir/config/btop"
+        "$HOME/.gitconfig:$dotfiles_dir/config/gitconfig"
+        "$HOME/.gitignore_global:$dotfiles_dir/config/gitignore_global"
+        "$HOME/.bashrc:$dotfiles_dir/config/bashrc"
+        "$HOME/.bash_aliases:$dotfiles_dir/config/bash_aliases"
+    )
+    
+    local synced_count=0
+    for config_mapping in "${configs[@]}"; do
+        IFS=':' read -r src dst <<< "$config_mapping"
+        
+        if [[ -f "$src" ]]; then
+            # Create backup if destination exists
+            if [[ -f "$dst" ]]; then
+                cp "$dst" "$backup_dir/$(basename "$dst")"
+            fi
+            
+            # Ensure destination directory exists
+            mkdir -p "$(dirname "$dst")"
+            cp "$src" "$dst"
+            echo "  Synced: $(basename "$src")"
+            ((synced_count++))
+        fi
+    done
+    
+    # Initialize git repository if needed
+    if [[ -d "$dotfiles_dir" ]] && [[ ! -d "$dotfiles_dir/.git" ]]; then
+        cd "$dotfiles_dir"
+        git init
+        git add .
+        git commit -m "Initial sync: Terminal Control Plane configurations"
+        print_success "Git repository initialized in dotfiles directory"
+        cd - >/dev/null
+    fi
+    
+    print_success "Synced $synced_count configuration files to dotfiles"
+    print_info "Backup created: $backup_dir"
 }
 
 # ============================================================================

@@ -1,0 +1,123 @@
+# TermKit Dotfiles Bash Aliases
+# Enhanced aliases for modern development workflow
+
+# Core tool replacements
+if command -v nvim &> /dev/null; then
+    alias vim='nvim'
+    alias vi='nvim'
+fi
+
+if command -v eza &> /dev/null; then
+    alias ls='eza --icons --git'
+    alias ll='eza --icons --git -l'
+    alias la='eza --icons --git -la'
+    alias lt='eza --icons --git --tree'
+fi
+
+if command -v bat &> /dev/null; then
+    alias cat='bat --paging=never --style=plain'
+    alias less='bat'
+fi
+
+if command -v procs &> /dev/null; then
+    alias ps='procs'
+fi
+
+# Modern tool aliases
+if command -v xh &> /dev/null; then
+    alias http='xh'
+fi
+
+if command -v jless &> /dev/null; then
+    alias jl='jless'
+fi
+
+if command -v doggo &> /dev/null; then
+    alias dig='doggo'
+fi
+
+if command -v glow &> /dev/null; then
+    alias readme='glow -p'
+fi
+
+if command -v tldr &> /dev/null; then
+    alias help='tldr'
+fi
+
+if command -v yazi &> /dev/null; then
+    alias fm='yazi'
+fi
+
+# Productivity aliases
+alias q='exit'
+alias c='clear'
+alias h='history'
+alias reload='source ~/.bashrc'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Navigation aliases
+alias home='cd ~'
+alias desktop='cd ~/Desktop'
+alias documents='cd ~/Documents'
+alias downloads='cd ~/Downloads'
+alias projects='cd ~/projects'
+
+# Enhanced grep aliases
+if command -v rg &> /dev/null; then
+    alias grep='rg --type-add 'config:*.{json,yaml,yml,toml}' --type config'
+    alias search='rg'
+    alias searchi='rg -i'
+fi
+
+# Git aliases
+if command -v lazygit &> /dev/null; then
+    alias lg='lazygit'
+fi
+
+alias gs='git status -s'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline --graph -10'
+alias gd='git diff'
+alias gco='git checkout'
+alias gb='git branch'
+alias gclean='git clean -fd && git gc --aggressive'
+
+# Docker aliases
+if command -v docker &> /dev/null; then
+    alias d='docker'
+    alias dc='docker-compose'
+    alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+    alias dim='docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"'
+    alias docker-cleanup='docker system prune -af --volumes'
+fi
+
+# System monitoring aliases
+if command -v btop &> /dev/null; then
+    alias top='btop'
+    alias htop='btop'
+fi
+
+# File system aliases
+alias du='du -h'
+alias df='df -h'
+alias duh='du -sh'
+alias dush='du -sh * | sort -hr'
+alias grepfs='grep -r -n -H --include="*.sh" --include="*.conf" --include="*.config"'
+
+# Network aliases
+alias myip='curl -s ifconfig.me'
+alias myiplocal='hostname -I | awk "{print $1}"'
+alias ports='netstat -tulnp'
+alias portslisten='netstat -tulnp | grep LISTEN'
+
+# Quick functions aliases
+alias fe='fzf_find_edit'
+alias fcd='fzf_find_cd'
+alias rge='ripgrep_edit'
+alias mkcd='mkdir_cd'
+
+# End of TermKit bash aliases
