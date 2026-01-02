@@ -88,6 +88,7 @@ JetBrains Mono Nerd Font - Development-friendly font with glyphs
 ```
 Shell integration - Enhanced bash with completions
 Tool configs   - Optimized settings for all tools
+Protection     - Read-only protection for critical files
 ```
 
 ## ⚙️ Configuration Options
@@ -458,6 +459,45 @@ cp -r ~/.config/termkit ~/termkit-config-backup
 # Restore from backup
 rm -rf ~/.config/termkit
 cp -r ~/termkit-config-backup ~/.config/termkit
+```
+
+## Dotfiles Protection System
+
+TermKit automatically implements read-only protection for critical configuration files during installation to prevent accidental modifications.
+
+### Protected Files
+- `~/.bashrc` - Main shell configuration
+- `~/.gitconfig` - Git configuration
+- `~/.bash_aliases` - Shell aliases
+- `~/.config/termkit/` - TermKit integration directory
+
+### Protection Mechanism
+```bash
+# Individual files: read-only
+chmod 444 ~/.bashrc ~/.gitconfig ~/.bash_aliases
+
+# TermKit directory: recursive read-only
+chmod -R 444 ~/.config/termkit/
+
+# Shell scripts: read-only + executable
+chmod 544 ~/.config/termkit/*.sh
+```
+
+### Customization Approach
+Instead of modifying protected files directly, use:
+- `~/.config/termkit/custom.sh` - For TermKit-specific customizations
+- `~/.bashrc.local` - For bash-specific additions
+- `~/.gitconfig.local` - For Git configuration extensions
+
+### Manual Override
+If you need to edit protected files:
+```bash
+# Temporarily make writable
+chmod 644 ~/.bashrc
+vim ~/.bashrc
+
+# Restore protection
+chmod 444 ~/.bashrc
 ```
 
 ---

@@ -24,6 +24,7 @@
 - **WezTerm**: Tokyo Night theme, JetBrains Mono font, productivity keybindings
 - **btop**: Performance-optimized settings
 - **Comprehensive Git**: Delta pager, improved diff settings
+- **Dotfiles Protection**: Read-only protection for critical configuration files
 
 ## 📦 Tool Stack
 
@@ -152,6 +153,12 @@ cd ~/nexi/termkit
 - **NeoVim**: `~/.config/nvim/` - LazyVim with optimized settings
 - **Git**: `~/.gitconfig` - Delta pager, improved settings
 
+### Dotfiles Protection System
+TermKit implements read-only protection for critical configuration files to prevent accidental modifications:
+- **Protected Files**: `~/.bashrc`, `~/.gitconfig`, `~/.bash_aliases`, `~/.config/termkit/`
+- **Customization**: Use `~/.config/termkit/custom.sh` or `~/.bashrc.local` for personal additions
+- **Manual Override**: Temporarily use `chmod 644` for editing, then restore with `chmod 444`
+
 ### Environment Variables
 ```bash
 export EDITOR="${EDITOR:-nvim}"           # Default editor
@@ -262,7 +269,48 @@ cat ~/.termkit-install.log
 
 ## 📚 Documentation
 
+### Comprehensive Documentation Suite
+
+- **[User Guide](docs/USER_GUIDE.md)**: Daily workflows, productivity patterns, and usage examples
+- **[API Documentation](docs/API.md)**: Complete API reference for scripts, functions, and configurations
+- **[Architecture Guide](docs/ARCHITECTURE.md)**: System architecture, components, and data flow
+- **[Installation Guide](docs/INSTALLATION.md)**: Detailed installation instructions and platform-specific guides
+- **[Troubleshooting Guide](docs/TROUBLESHOOTING.md)**: Comprehensive troubleshooting and issue resolution
+- **[Tools Handbook](TERMKIT_TOOLS_HANDBOOK.md)**: Complete guide to all installed tools and their usage
+
 ### File Structure
+```
+~/nexi/termkit/
+├── install.sh                 # Main installer (3000+ lines)
+├── dotfiles/                  # Version-controlled configurations
+│   ├── install.sh            # Dotfiles management system
+│   ├── config/               # Configuration files
+│   ├── scripts/              # Management utilities
+│   └── backups/              # Backup storage
+├── tools/                    # Tool installation modules
+│   ├── core.sh               # Core foundation tools
+│   ├── cli.sh                # Essential CLI tools
+│   ├── git.sh                # Git & data processing tools
+│   ├── file-process.sh       # File & process management
+│   ├── devops.sh            # DevOps tools (optional)
+│   └── utilities.sh          # Additional utilities
+├── config/                   # Configuration templates
+│   ├── starship.toml        # Starship prompt config
+│   ├── wezterm.lua          # WezTerm terminal config
+│   ├── gitconfig            # Git settings
+│   └── gitignore_global     # Global gitignore
+├── scripts/                  # Utility scripts
+│   ├── verify-installation.sh # Comprehensive verification
+│   ├── validate.sh          # Configuration validation
+│   ├── security.sh          # Security functions
+│   ├── sync.sh              # Dotfiles synchronization
+│   └── test-dotfiles.sh     # Testing framework
+├── docs/                     # Documentation suite
+│   ├── API.md               # API documentation
+│   ├── ARCHITECTURE.md      # System architecture
+│   ├── INSTALLATION.md      # Installation guide
+│   └── TROUBLESHOOTING.md   # Troubleshooting guide
+└── TERMKIT_TOOLS_HANDBOOK.md # Tools reference
 ```
 ~/nexi/termkit/
 ├── install.sh              # Main installer (3000+ lines)
@@ -360,6 +408,46 @@ fe                    # File search with preview
 fcd                   # Directory search
 lg                    # Launch lazygit
 rge pattern           # Code search
+sysinfo               # System information
+```
+
+### Quick Command Reference
+
+#### Essential Commands
+```bash
+fe                    # Fuzzy find and edit files
+fcd                   # Fuzzy find and cd to directory
+rge <pattern>         # Search codebase with preview
+lg                    # Launch lazygit Git interface
+sysinfo               # Display system information
+```
+
+#### Enhanced Aliases
+```bash
+# Modern tools
+vim → nvim           # NeoVim editor
+cat → bat            # Syntax-highlighted cat
+ls → eza            # Modern ls with icons
+top → btop           # Beautiful system monitor
+
+# Git shortcuts
+gs → git status -s
+gl → git log --oneline --graph -10
+gd → git diff
+gco → git checkout
+gp → git push
+
+# Productivity
+q → exit
+c → clear
+h → history
+```
+
+#### Keyboard Shortcuts
+```bash
+Ctrl+T     # Fuzzy file search
+Ctrl+R     # Enhanced history search
+Alt+C      # Directory navigation
 ```
 
 ### Daily Workflow Examples
