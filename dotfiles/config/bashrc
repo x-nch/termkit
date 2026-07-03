@@ -1,221 +1,53 @@
 #!/usr/bin/env bash
-# ~/.bashrc: executed by bash(1) for non-login shells.
+# ~/.bashrc — TermKit-managed bash configuration
+# Non-login interactive shells only.
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+# Not interactive? Exit immediately.
+[[ $- != *i* ]] && return
 
-# TermKit Configuration Section
-export TERMKIT_VERSION="1.0.0"
-export TERMKIT_CONFIG="$HOME/.config/termkit"
+# ── TermKit shared layer ──────────────────────────────────────────────────────
+_TERMKIT_SHELL="${HOME}/.config/termkit/shell"
+[[ -f "${_TERMKIT_SHELL}/env.sh"       ]] && source "${_TERMKIT_SHELL}/env.sh"
+[[ -f "${_TERMKIT_SHELL}/aliases.sh"   ]] && source "${_TERMKIT_SHELL}/aliases.sh"
+[[ -f "${_TERMKIT_SHELL}/functions.sh" ]] && source "${_TERMKIT_SHELL}/functions.sh"
+unset _TERMKIT_SHELL
 
-# Path additions
-if [ -d "$HOME/.local/bin" ]; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
+# ── bash-specific aliases file ────────────────────────────────────────────────
+[[ -f "$HOME/.bash_aliases" ]] && source "$HOME/.bash_aliases"
 
-if [ -d "$HOME/.cargo/bin" ]; then
-    PATH="$HOME/.cargo/bin:$PATH"
-fi
-
-# Basic exports
-export EDITOR='vim'
-export VISUAL='vim'
-export PAGER='less'
-export LESS='-R'
-
-# History configuration
-HISTCONTROL=ignoreboth
-HISTSIZE=1000
-HISTFILESIZE=2000
-shopt -s histappend
+# ── History ───────────────────────────────────────────────────────────────────
+HISTCONTROL=ignoreboth:erasedups
+HISTSIZE=10000
+HISTFILESIZE=20000
 HISTTIMEFORMAT="%F %T "
+shopt -s histappend     # Append; don't overwrite
+shopt -s cmdhist        # Multi-line commands as one history entry
 
-# Window size check and update
-shopt -s checkwinsize
+# ── Shell options ─────────────────────────────────────────────────────────────
+shopt -s checkwinsize   # Update LINES/COLUMNS after each command
+shopt -s extglob        # Extended pattern matching
+shopt -s globstar       # ** recursive glob
+shopt -s autocd  2>/dev/null || true  # bash 4+
+shopt -s dirspell 2>/dev/null || true
 
-# Extended globbing
-shopt -s extglob
-
-# Case-insensitive globbing (optional)
-# shopt -s nocaseglob
-
-# Enable programmable completion features (if not already enabled)
+# ── Completion ────────────────────────────────────────────────────────────────
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
-# Custom aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-alias df='df -h'
-alias du='du -h'
-alias free='free -h'
-alias tree='tree -C'
-alias mkdir='mkdir -p'
-alias wget='wget -c'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-
-# Git aliases
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git pull'
-alias gd='git diff'
-alias gb='git branch'
-alias gco='git checkout'
-
-# Docker aliases (if docker is available)
-if command -v docker >/dev/null 2>&1; then
-    alias d='docker'
-    alias dc='docker-compose'
-    alias dps='docker ps'
-    alias di='docker images'
-fi
-
-# kubectl aliases (if kubectl is available)
-if command -v kubectl >/dev/null 2>&1; then
-    alias k='kubectl'
-    alias kgp='kubectl get pods'
-    alias kgs='kubectl get services'
-    alias kga='kubectl get all'
-fi
-
-# System monitoring aliases
-alias psa='ps aux'
-alias meminfo='free -m -l -t'
-alias psmem='ps auxf | sort -nr -k 4'
-alias psmem10='ps auxf | sort -nr -k 4 | head -10'
-alias pscpu='ps auxf | sort -nr -k 3'
-alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
-
-# Directory navigation
-cd() {
-    builtin cd "$@" && ls
-}
-
-# mkdir and cd into it
-mkcd() {
-    mkdir -p "$1" && cd "$1"
-}
-
-# Extract various archive formats
-extract() {
-    if [ -f "$1" ]; then
-        case "$1" in
-            *.tar.bz2)   tar xjf "$1"     ;;
-            *.tar.gz)    tar xzf "$1"     ;;
-            *.bz2)       bunzip2 "$1"     ;;
-            *.rar)       unrar x "$1"     ;;
-            *.gz)        gunzip "$1"      ;;
-            *.tar)       tar xf "$1"      ;;
-            *.tbz2)      tar xjf "$1"     ;;
-            *.tgz)       tar xzf "$1"     ;;
-            *.zip)       unzip "$1"       ;;
-            *.Z)         uncompress "$1"  ;;
-            *.7z)        7z x "$1"        ;;
-            *)           echo "'$1' cannot be extracted via extract()" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
+    if   [[ -f /usr/share/bash-completion/bash_completion ]]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [[ -f /etc/bash_completion ]]; then
+        source /etc/bash_completion
     fi
-}
-
-# Search and replace in files recursively
-search_replace() {
-    if [ $# -ne 3 ]; then
-        echo "Usage: search_replace <search> <replace> <directory>"
-        return 1
-    fi
-    
-    find "$3" -type f -exec sed -i "s/$1/$2/g" {} +
-}
-
-# Terminal colors and prompt enhancement
-if command -v tput >/dev/null 2>&1; then
-    RED=$(tput setaf 1)
-    GREEN=$(tput setaf 2)
-    YELLOW=$(tput setaf 3)
-    BLUE=$(tput setaf 4)
-    MAGENTA=$(tput setaf 5)
-    CYAN=$(tput setaf 6)
-    WHITE=$(tput setaf 7)
-    RESET=$(tput sgr0)
-else
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[1;33m'
-    BLUE='\033[0;34m'
-    MAGENTA='\033[0;35m'
-    CYAN='\033[0;36m'
-    WHITE='\033[1;37m'
-    RESET='\033[0m'
 fi
 
-# Custom prompt (if starship is not available)
-if ! command -v starship >/dev/null 2>&1; then
-    PS1='\[${GREEN}\]\u@\h\[${RESET}\]:\[${BLUE}\]\w\[${RESET}\]\$ '
-fi
-
-# Starship prompt integration
+# ── Prompt ────────────────────────────────────────────────────────────────────
 if command -v starship >/dev/null 2>&1; then
     eval "$(starship init bash)"
+else
+    # Minimal fallback prompt
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 fi
 
-# Node.js version management (if nvm is available)
-export NVM_DIR="$HOME/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-    source "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-fi
-
-# Python environment
-if command -v python3 >/dev/null 2>&1; then
-    export PYTHONPATH="$PYTHONPATH:$HOME/.local/lib/python3/site-packages"
-fi
-
-# Ruby version management (if rbenv is available)
-if command -v rbenv >/dev/null 2>&1; then
-    eval "$(rbenv init - bash)"
-fi
-
-# Go development
-if command -v go >/dev/null 2>&1; then
-    export GOPATH="$HOME/go"
-    export PATH="$GOPATH/bin:$PATH"
-fi
-
-# Rust development (if cargo is available)
-if command -v cargo >/dev/null 2>&1; then
-    source "$HOME/.cargo/env" 2>/dev/null || true
-fi
-
-# Local customizations
-if [ -f "$HOME/.bashrc.local" ]; then
-    source "$HOME/.bashrc.local"
-fi
-
-# TermKit local customizations
-if [ -f "$TERMKIT_CONFIG/bashrc.local" ]; then
-    source "$TERMKIT_CONFIG/bashrc.local"
-fi
-
-# Welcome message
-if [ -f "$HOME/.motd" ]; then
-    cat "$HOME/.motd"
-fi
-
-# End of TermKit Configuration
+# ── Local overrides (never committed) ─────────────────────────────────────────
+[[ -f "$HOME/.bashrc.local" ]] && source "$HOME/.bashrc.local"
+[[ -f "${TERMKIT_CONFIG:-$HOME/.config/termkit}/bashrc.local" ]] \
+    && source "${TERMKIT_CONFIG:-$HOME/.config/termkit}/bashrc.local"

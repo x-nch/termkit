@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# install.sh — TermKit bootstrap entry point
+#
+# This script exists for discoverability ("clone and run ./install.sh").
+# All logic lives in bin/termkit. This just delegates.
+#
+# Usage:
+#   ./install.sh                  # Interactive install (developer profile)
+#   ./install.sh minimal          # Install minimal profile
+#   ./install.sh --dry-run        # Preview without changes
+#   ./install.sh --help           # Show full usage
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "${SCRIPT_DIR}/bin/termkit" install "$@"

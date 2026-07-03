@@ -1,0 +1,31 @@
+name: termkit
+version: 0.1.0
+status: active
+priority: P1
+purpose: Terminal kit for managing dotfiles, shell configuration, and development environment across machines.
+stack:
+  - Shell
+  - Git
+  - tmux
+  - WezTerm
+  - Starship
+  - Vim
+tech_details:
+  language: shell
+  framework: none
+  runtime: bash/zsh
+  database: none
+  container: none
+git:
+  remote: https://github.com/x-nch/termkit.git
+  branch: develop_xperimet
+  is_monorepo: false
+health:
+  score: 75
+  last_checked: "2026-05-07"
+  issues:
+    - "10 uncommitted files"
+next_steps:
+  - priority: medium
+    task: Commit or stash pending changes
+dependencies: []
